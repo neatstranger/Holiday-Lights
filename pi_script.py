@@ -30,10 +30,14 @@ off = (0, 0, 0)
 pixels.fill((0,0,0))
 while True:
     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
-        for currentPixel in range(pixelCount/3):
-            pixels[currentPixel] = color_one
-            # pixels[currentPixel] = color_two
-            # pixels[currentPixel] = color_three
+        x = 0
+        while x <= pixelCount:
+            pixels[x] = color_one
+            pixels[x+1] = color_two
+            pixels[x+2] = color_three
+
+            x += 3
+
         time.sleep(600)
 
 
