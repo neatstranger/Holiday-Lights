@@ -18,9 +18,9 @@ import datetime
 pixelCount = 209
 pixels = neopixel.NeoPixel(board.D18, pixelCount)
 
-purple = (0,0,16)
-orange = (16,0,0)
-green = (0,16,0)
+color_one = (0,0,16)
+color_two = (16,0,0)
+color_three = (0,16,0)
 off = (0, 0, 0)
 
 
@@ -29,10 +29,10 @@ while True:
     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
         for currentPixel in range(pixelCount):
             time.sleep(0.075)
-            pixels[currentPixel] = orange
+            pixels[currentPixel] = color_one
         for currentPixel in range(pixelCount-1, 0, -1):
             time.sleep(0.1)
-            pixels[currentPixel] =  purple
+            pixels[currentPixel] =  color_two
         for currentPixel in range(pixelCount):
             time.sleep(0.075)
             pixels[currentPixel] = off
