@@ -23,7 +23,7 @@ pixelCount = 209
 pixels = neopixel.NeoPixel(board.D18, pixelCount)
 
 color_one = (0,0,16)
-color_two = (16,0,0)
+color_two = (0,16,0)
 color_three = (4,4,4)
 off = (0, 0, 0)
 
