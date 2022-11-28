@@ -24,17 +24,17 @@ color_three = (0,16,0)
 off = (0, 0, 0)
 
 
-pixels.fill((0,0,0))
-while True:
-    while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
-        for currentPixel in range(pixelCount):
-            time.sleep(0.075)
-            pixels[currentPixel] = color_one
-        for currentPixel in range(pixelCount-1, 0, -1):
-            time.sleep(0.1)
-            pixels[currentPixel] =  color_two
-        for currentPixel in range(pixelCount):
-            time.sleep(0.075)
-            pixels[currentPixel] = off
-    pixels.fill((0,0,0))
-    time.sleep(600)
+pixels.fill((0,0,16))
+# while True:
+#     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
+#         for currentPixel in range(pixelCount):
+#             time.sleep(0.075)
+#             pixels[currentPixel] = color_one
+#         for currentPixel in range(pixelCount-1, 0, -1):
+#             time.sleep(0.1)
+#             pixels[currentPixel] =  color_one
+#         for currentPixel in range(pixelCount):
+#             time.sleep(0.075)
+#             pixels[currentPixel] = off
+#     pixels.fill((0,0,0))
+#     time.sleep(600)
