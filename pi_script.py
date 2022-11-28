@@ -37,7 +37,7 @@ while True:
             #pixels[x+2] = color_three
 
             x += 2
-
+        pixels.fill((0,0,5))
         time.sleep(600)
 
 
