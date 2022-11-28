@@ -31,18 +31,18 @@ pixels.fill((0,0,0))
 while True:
     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
         pixels.fill((0,0,5))
-        time.sleep(2)
+        time.sleep(5)
         pixels.fill((0,5,0))
-        time.sleep(2)
+        time.sleep(5)
         pixels.fill((3,3,3))
-        time.sleep(2)
+        time.sleep(5)
         x = 0
         while x <= pixelCount:
             pixels[x] = color_one
             pixels[x+1] = color_two
             time.sleep(0.1)
             x += 2
-        
+        time.sleep(10)
         
 
 
