@@ -15,16 +15,28 @@ import datetime
 #second kitchen corner pixel = 205
 
 
+#For some reason the colors aren't right
+#(blue,green,red)
+
+
 pixelCount = 209
 pixels = neopixel.NeoPixel(board.D18, pixelCount)
 
 color_one = (0,0,16)
 color_two = (16,0,0)
-color_three = (0,16,0)
+color_three = (4,4,4)
 off = (0, 0, 0)
 
+pixels.fill((0,0,0))
+while True:
+    while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
+        for currentPixel in range(pixelCount/3):
+            pixels[currentPixel] = color_one
+            pixels[currentPixel] = color_two
+            pixels[currentPixel] = color_three
+        time.sleep(600)
 
-pixels.fill((0,0,16))
+
 # while True:
 #     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
 #         for currentPixel in range(pixelCount):
