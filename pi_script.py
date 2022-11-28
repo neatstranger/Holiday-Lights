@@ -32,8 +32,8 @@ while True:
     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
         for currentPixel in range(pixelCount/3):
             pixels[currentPixel] = color_one
-            pixels[currentPixel] = color_two
-            pixels[currentPixel] = color_three
+            # pixels[currentPixel] = color_two
+            # pixels[currentPixel] = color_three
         time.sleep(600)
 
 
