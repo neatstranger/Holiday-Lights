@@ -10,7 +10,7 @@ import datetime
 
 
 #Front door right first pixel = 131
-#kitcehn first corner pixel =  160
+#kitchen first corner pixel =  160
 #top of the kitchen roof = pixel 182
 #second kitchen corner pixel = 205
 
@@ -34,9 +34,9 @@ while True:
         while x <= pixelCount:
             pixels[x] = color_one
             pixels[x+1] = color_two
-            pixels[x+2] = color_three
+            #pixels[x+2] = color_three
 
-            x += 3
+            x += 2
 
         time.sleep(600)
 
