@@ -29,7 +29,7 @@ off = (0, 0, 0)
 
 pixels.fill((0,0,0))
 while True:
-    while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
+    while (datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 23) or (datetime.datetime.now().hour >= 4 and datetime.datetime.now().hour <= 7) :
         red = 0
         while red < 10:
             pixels.fill((0,0,red))
