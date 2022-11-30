@@ -38,14 +38,21 @@ while True:
         while green < 10:
             pixels.fill((0,green,0))
             green += 0.1
+        white = 0
         while white < 5:
             pixels.fill((white, white, white))
-            time.sleep(0.5)
+            white += 0.1
         x = 0
         while x <= pixelCount:
-            pixels[x] = color_one
-            pixels[x+1] = color_two
-            time.sleep(0.2)
+            print(x)
+            red = 0 
+            while red < 25:
+               pixels[x] = (0,0,red) 
+               red += 2
+            green = 0
+            while green < 25:
+               pixels[x+1] = (0,green,0)
+               green +=2
             x += 2
         time.sleep(10)
         
