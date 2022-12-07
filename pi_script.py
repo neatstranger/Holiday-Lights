@@ -48,7 +48,7 @@ while True:
             white += 0.1
         x = 0
 
-        while x < pixelCount:
+        while x < pixelCount -1:
             red = 0 
             while red < 25:
                pixels[x] = (0,0,red) 
