@@ -32,8 +32,9 @@ kitchen_section = 209
 
 pixels.fill((0,0,0))
 while True:
-    pixels.auto_write = True
     while (datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 23) or (datetime.datetime.now().hour >= 4 and datetime.datetime.now().hour <= 7) :
+        pixels.auto_write = True
+        pixels.fill((0,0,0))
         print("Started Showing Solid Color")
         red = 0
         while red < 10:
