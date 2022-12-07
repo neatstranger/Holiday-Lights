@@ -34,6 +34,7 @@ pixels.fill((0,0,0))
 while True:
     pixels.auto_write = True
     while (datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 23) or (datetime.datetime.now().hour >= 4 and datetime.datetime.now().hour <= 7) :
+        print("Started Showing Solid Color")
         red = 0
         while red < 10:
             pixels.fill((0,0,red))
@@ -47,7 +48,7 @@ while True:
             pixels.fill((white, white, white))
             white += 0.1
         x = 0
-
+        print("Started Showing Red and Green")
         while x < pixelCount -1:
             red = 0 
             while red < 25:
@@ -59,21 +60,21 @@ while True:
                green +=2
             x += 2
         pixels.auto_write = False
-
+        print("Started Showing Garage/Kitchen Seperate")
         for x in range(0,25):
             for pixel in range(0,garage_section):
                 pixels[pixel] = (0,0,x)
             for pixel in range(garage_section, kitchen_section):
                 pixels[pixel] = (0,x,0)
             pixels.show()
-            time.sleep(0.5)
+            time.sleep(0.1)
         for x in range(0,25):
             for pixel in range(0,garage_section):
-                pixels[pixel] = (0,25,0)
+                pixels[pixel] = (0,x,0)
             for pixel in range(garage_section, kitchen_section):
-                pixels[pixel] = (0,0,25)
+                pixels[pixel] = (0,0,x)
             pixels.show()
-            time.sleep(0.5)
+            time.sleep(0.1)
         
         time.sleep(10)
         
