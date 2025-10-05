@@ -7,8 +7,8 @@ Type=simple
 ExecStart=/opt/Holiday-Lights/venv/bin/python /opt/Holiday-Lights/pi_script.py
 WorkingDirectory=/opt/Holiday-Lights
 Restart=always
-User=millerad
-Group=millerad
+User=sudo
+Group=sudo
 Environment=PYTHONUNBUFFERED=1
 
 [Install]
