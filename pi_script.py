@@ -10,6 +10,7 @@ garage_section = 130
 kitchen_section = 209
 
 off = (0, 0, 0)
+global_brightness = 0.5
 
 # ---------- COLOR HELPER ----------
 
@@ -65,9 +66,9 @@ def get_color(name: str, brightness: float = 1.0) -> tuple:
     }
 
     r, g, b = colors.get(name.lower(), (255, 255, 255))
-    r = int(r * brightness)
-    g = int(g * brightness)
-    b = int(b * brightness)
+    r = int(r * brightness * global_brightness)
+    g = int(g * brightness * global_brightness)
+    b = int(b * brightness * global_brightness)
 
     # Return as BGR instead of RGB
     return (b, g, r)
@@ -128,19 +129,29 @@ def garage_kitchen_mode_2(color1, color2, color3):
         time.sleep(0.05)
 
 def twinkle_sparkle(color1, color2, color3, duration=10):
-    print("✨ Twinkle sparkle effect...")
+    print("✨ Twinkle sparkle effect (randomized)...")
     start_time = time.time()
     colors = [get_color(color1), get_color(color2), get_color(color3)]
+
     while time.time() - start_time < duration:
-        # Randomly pick a pixel and color
-        idx = random.randint(0, pixelCount - 1)
-        pixels[idx] = random.choice(colors)
+        # Randomly choose how many pixels twinkle at once
+        twinkle_count = random.randint(1, 6)
+        twinkle_pixels = random.sample(range(pixelCount), twinkle_count)
+
+        for idx in twinkle_pixels:
+            c = random.choice(colors)
+            brightness = random.uniform(0.2, 1.0)
+            pixels[idx] = tuple(int(ch * brightness) for ch in c)
         pixels.show()
-        time.sleep(0.05)
-        # Fade it back to off
-        pixels[idx] = off
+
+        # Random delay before fading out (adds natural irregularity)
+        time.sleep(random.uniform(0.03, 0.15))
+
+        # Fade them out
+        for idx in twinkle_pixels:
+            pixels[idx] = off
         pixels.show()
-        time.sleep(0.05)
+        time.sleep(random.uniform(0.05, 0.2))
 
 
 def chase_wipe(color1, color2, color3, delay=0.01):
@@ -155,34 +166,101 @@ def chase_wipe(color1, color2, color3, delay=0.01):
         time.sleep(delay)
 
 
-def breathe_pulse(color1, color2, cycles=3, delay=0.02):
-    print("💨 Breathe pulse effect...")
+def breathe_pulse(color1, color2, cycles=None, delay=0.02):
+    print("💨 Breathe pulse effect (more organic)...")
+    if cycles is None:
+        cycles = random.randint(2, 5)
+
     c1 = get_color(color1)
     c2 = get_color(color2)
+
     for _ in range(cycles):
-        # Fade up
         for b in range(0, 101, 2):
             blend = tuple(int(c1[i] * (1 - b / 100) + c2[i] * (b / 100)) for i in range(3))
             pixels.fill(blend)
             pixels.show()
-            time.sleep(delay)
-        # Fade down
+            time.sleep(delay + random.uniform(-0.005, 0.01))  # slight jitter
         for b in range(100, -1, -2):
             blend = tuple(int(c1[i] * (1 - b / 100) + c2[i] * (b / 100)) for i in range(3))
             pixels.fill(blend)
             pixels.show()
-            time.sleep(delay)
+            time.sleep(delay + random.uniform(-0.005, 0.01))
 
+
+def meteor_rain(color1, color2, color3, meteor_size=10, meteor_trail_decay=0.8, delay=0.03):
+    print("☄️ Meteor rain effect...")
+    colors = [get_color(color1), get_color(color2), get_color(color3)]
+    pixels.fill(off)
+
+    for i in range(pixelCount * 2):
+        # fade all pixels a bit
+        for j in range(pixelCount):
+            r, g, b = pixels[j]
+            pixels[j] = (int(r * meteor_trail_decay), int(g * meteor_trail_decay), int(b * meteor_trail_decay))
+
+        # draw the meteor
+        for j in range(meteor_size):
+            if 0 <= i - j < pixelCount:
+                pixels[i - j] = random.choice(colors)
+
+        pixels.show()
+        time.sleep(delay)
+
+def color_wave(color1, color2, color3, speed=0.05):
+    print("🌊 Color wave effect...")
+    base_colors = [get_color(color1), get_color(color2), get_color(color3)]
+    steps = 256
+
+    for step in range(steps):
+        for i in range(pixelCount):
+            # phase shift each pixel by its position
+            phase = (i * 256 // pixelCount + step) % 256
+            c1 = base_colors[0]
+            c2 = base_colors[1]
+            c3 = base_colors[2]
+            if phase < 85:
+                color = (
+                    int(c1[0] * (255 - phase * 3) / 255 + c2[0] * (phase * 3) / 255),
+                    int(c1[1] * (255 - phase * 3) / 255 + c2[1] * (phase * 3) / 255),
+                    int(c1[2] * (255 - phase * 3) / 255 + c2[2] * (phase * 3) / 255)
+                )
+            elif phase < 170:
+                phase -= 85
+                color = (
+                    int(c2[0] * (255 - phase * 3) / 255 + c3[0] * (phase * 3) / 255),
+                    int(c2[1] * (255 - phase * 3) / 255 + c3[1] * (phase * 3) / 255),
+                    int(c2[2] * (255 - phase * 3) / 255 + c3[2] * (phase * 3) / 255)
+                )
+            else:
+                phase -= 170
+                color = (
+                    int(c3[0] * (255 - phase * 3) / 255 + c1[0] * (phase * 3) / 255),
+                    int(c3[1] * (255 - phase * 3) / 255 + c1[1] * (phase * 3) / 255),
+                    int(c3[2] * (255 - phase * 3) / 255 + c1[2] * (phase * 3) / 255)
+                )
+            pixels[i] = color
+        pixels.show()
+        time.sleep(speed)
 # ---------- MAIN RUNNERS ----------
 
 def run_sequence(color1, color2, color3):
-    fade_colors(color1, color2, color3)
-    alternating_pattern(color1, color2, color3)
-    garage_kitchen_mode_1(color1, color2, color3)
-    garage_kitchen_mode_2(color1, color2, color3)
-    twinkle_sparkle(color1, color2, color3)
-    chase_wipe(color1, color2, color3)
-    breathe_pulse(color1, color2)
+    animations = [
+        lambda: fade_colors(color1, color2, color3),
+        lambda: alternating_pattern(color1, color2, color3),
+        lambda: garage_kitchen_mode_1(color1, color2, color3),
+        lambda: garage_kitchen_mode_2(color1, color2, color3),
+        lambda: twinkle_sparkle(color1, color2, color3),
+        lambda: chase_wipe(color1, color2, color3),
+        lambda: breathe_pulse(color1, color2),
+        lambda: meteor_rain(color1, color2, color3),
+        lambda: color_wave(color1, color2, color3),
+    ]
+
+    random.shuffle(animations)
+
+    # Randomly choose how many animations to run this cycle
+    for anim in random.sample(animations, random.randint(4, len(animations))):
+        anim()
 
 def run_holiday(holiday: str):
     """
