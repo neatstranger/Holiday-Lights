@@ -241,6 +241,39 @@ def color_wave(color1, color2, color3, speed=0.05):
             pixels[i] = color
         pixels.show()
         time.sleep(speed)
+
+def bar_sweep(color1, color2, color3, bar_width=5, delay=0.01):
+    print("📶 Bar sweep animation...")
+
+    # Step 1 – fill with base color
+    pixels.fill(get_color(color1))
+    pixels.show()
+    time.sleep(0.3)
+
+    # Step 2 – bar moves left ➡ right
+    c2 = get_color(color2)
+    for pos in range(-bar_width, pixelCount + bar_width):
+        pixels.fill(get_color(color1))  # reset to base color
+        for i in range(pos, pos + bar_width):
+            if 0 <= i < pixelCount:
+                pixels[i] = c2
+        pixels.show()
+        time.sleep(delay)
+
+    time.sleep(0.3)  # brief pause
+
+    # Step 3 – bar moves right ➡ left
+    c3 = get_color(color3)
+    for pos in range(pixelCount + bar_width, -bar_width, -1):
+        pixels.fill(get_color(color1))
+        for i in range(pos - bar_width, pos):
+            if 0 <= i < pixelCount:
+                pixels[i] = c3
+        pixels.show()
+        time.sleep(delay)
+
+
+        
 # ---------- MAIN RUNNERS ----------
 
 def run_sequence(color1, color2, color3):
@@ -254,11 +287,10 @@ def run_sequence(color1, color2, color3):
         lambda: breathe_pulse(color1, color2),
         lambda: meteor_rain(color1, color2, color3),
         lambda: color_wave(color1, color2, color3),
+        lambda: bar_sweep(color1, color2, color3),  # 👈 New one added
     ]
 
     random.shuffle(animations)
-
-    # Randomly choose how many animations to run this cycle
     for anim in random.sample(animations, random.randint(4, len(animations))):
         anim()
 
