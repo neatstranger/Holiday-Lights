@@ -2,6 +2,7 @@ import neopixel
 import board
 import time
 import random
+import math
 
 pixelCount = 209
 pixels = neopixel.NeoPixel(board.D18, pixelCount, auto_write=False)
@@ -76,24 +77,26 @@ def get_color(name: str, brightness: float = 1.0) -> tuple:
 
 # ---------- ANIMATIONS ----------
 
-def fade_colors(color1, color2, color3):
-    print("Fading color 1...")
-    for level in range(0, 10):
-        pixels.fill(get_color(color1, brightness=level / 10))
-        pixels.show()
-        time.sleep(0.02)
+def ease_brightness(step, total_steps):
+    """Smooth fade-in/out curve using a sine easing."""
+    return math.sin((step / total_steps) * (math.pi / 2))
 
-    print("Fading color 2...")
-    for level in range(0, 10):
-        pixels.fill(get_color(color2, brightness=level / 10))
-        pixels.show()
-        time.sleep(0.02)
 
-    print("Fading color 3...")
-    for level in range(0, 10):
-        pixels.fill(get_color(color3, brightness=level / 10))
-        pixels.show()
-        time.sleep(0.02)
+
+def fade_colors(color1, color2, color3, steps=50, delay=0.03):
+    print("🌈 Smooth fade through three colors...")
+    sequence = [color1, color2, color3]
+    
+    for i in range(len(sequence)):
+        c_start = get_color(sequence[i])
+        c_end = get_color(sequence[(i + 1) % len(sequence)])
+        
+        for step in range(steps + 1):
+            t = ease_brightness(step, steps)
+            blend = tuple(int(c_start[j] * (1 - t) + c_end[j] * t) for j in range(3))
+            pixels.fill(blend)
+            pixels.show()
+            time.sleep(delay)
 
 
 def alternating_pattern(color1, color2, color3):
@@ -107,15 +110,16 @@ def alternating_pattern(color1, color2, color3):
     pixels.show()
 
 
-def garage_kitchen_mode_1(color1, color2, color3):
-    print("Garage/Kitchen sections – mode 1...")
-    for level in range(0, 25):
+def garage_kitchen_mode_1(color1, color2, color3, steps=40, delay=0.03):
+    print("Garage/Kitchen sections – smooth fade mode 1...")
+    for step in range(steps + 1):
+        b = ease_brightness(step, steps)
         for pixel in range(0, garage_section):
-            pixels[pixel] = get_color(color1, brightness=level / 25)
+            pixels[pixel] = get_color(color1, brightness=b)
         for pixel in range(garage_section, kitchen_section):
-            pixels[pixel] = get_color(color2, brightness=level / 25)
+            pixels[pixel] = get_color(color2, brightness=b)
         pixels.show()
-        time.sleep(0.05)
+        time.sleep(delay)
 
 
 def garage_kitchen_mode_2(color1, color2, color3):
@@ -129,29 +133,27 @@ def garage_kitchen_mode_2(color1, color2, color3):
         time.sleep(0.05)
 
 def twinkle_sparkle(color1, color2, color3, duration=10):
-    print("✨ Twinkle sparkle effect (randomized)...")
+    print("✨ Twinkle sparkle with fades...")
     start_time = time.time()
     colors = [get_color(color1), get_color(color2), get_color(color3)]
 
     while time.time() - start_time < duration:
-        # Randomly choose how many pixels twinkle at once
-        twinkle_count = random.randint(1, 6)
-        twinkle_pixels = random.sample(range(pixelCount), twinkle_count)
+        idx = random.randint(0, pixelCount - 1)
+        c = random.choice(colors)
 
-        for idx in twinkle_pixels:
-            c = random.choice(colors)
-            brightness = random.uniform(0.2, 1.0)
-            pixels[idx] = tuple(int(ch * brightness) for ch in c)
-        pixels.show()
+        # fade in
+        for step in range(0, 20):
+            b = ease_brightness(step, 20)
+            pixels[idx] = tuple(int(ch * b) for ch in c)
+            pixels.show()
+            time.sleep(0.01)
 
-        # Random delay before fading out (adds natural irregularity)
-        time.sleep(random.uniform(0.03, 0.15))
-
-        # Fade them out
-        for idx in twinkle_pixels:
-            pixels[idx] = off
-        pixels.show()
-        time.sleep(random.uniform(0.05, 0.2))
+        # fade out
+        for step in range(20, -1, -1):
+            b = ease_brightness(step, 20)
+            pixels[idx] = tuple(int(ch * b) for ch in c)
+            pixels.show()
+            time.sleep(0.01)
 
 
 def chase_wipe(color1, color2, color3, delay=0.01):
@@ -273,7 +275,16 @@ def bar_sweep(color1, color2, color3, bar_width=5, delay=0.01):
         time.sleep(delay)
 
 
-        
+def fade_to_black(steps=30, delay=0.02):
+    for step in range(steps, -1, -1):
+        b = ease_brightness(step, steps)
+        for i in range(pixelCount):
+            r, g, bl = pixels[i]
+            pixels[i] = (int(bl * b), int(g * b), int(r * b))
+        pixels.show()
+        time.sleep(delay)
+
+
 # ---------- MAIN RUNNERS ----------
 
 def run_sequence(color1, color2, color3):
@@ -287,12 +298,25 @@ def run_sequence(color1, color2, color3):
         lambda: breathe_pulse(color1, color2),
         lambda: meteor_rain(color1, color2, color3),
         lambda: color_wave(color1, color2, color3),
-        lambda: bar_sweep(color1, color2, color3),  # 👈 New one added
+        lambda: bar_sweep(color1, color2, color3),
     ]
 
-    random.shuffle(animations)
-    for anim in random.sample(animations, random.randint(4, len(animations))):
-        anim()
+    # Randomize the order and length of the sequence
+    chosen_animations = random.sample(animations, random.randint(4, len(animations)))
+
+    for anim in chosen_animations:
+        # optional fade-in: start from black to avoid jarring start
+        fade_to_black(steps=10, delay=0.01)
+
+        anim()  # run the actual animation
+        
+        # fade out gracefully before moving on
+        fade_to_black(steps=30, delay=0.02)
+
+        # tiny pause to make transitions feel intentional
+        time.sleep(0.2)
+
+        
 
 def run_holiday(holiday: str):
     """

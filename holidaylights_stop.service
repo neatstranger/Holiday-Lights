@@ -1,0 +1,6 @@
+[Unit]
+Description=Stop Holiday Lights Service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl stop holiday-lights.service
