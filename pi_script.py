@@ -30,7 +30,7 @@ def get_color(name: str, brightness: float = 1.0) -> tuple:
         # --- Halloween ---
         "halloween_orange": (255, 69, 0),
         "halloween_purple": (128, 0, 128),
-        "halloween_black": (0, 0, 0),
+        "halloween_green": (0, 255, 0),
 
         # --- Easter ---
         "easter_pink": (255, 182, 193),
@@ -192,7 +192,7 @@ def run_holiday(holiday: str):
     holiday = holiday.lower()
     palettes = {
         "christmas": ("christmas_red", "christmas_green", "christmas_gold"),
-        "halloween": ("halloween_orange", "halloween_purple", "halloween_black"),
+        "halloween": ("halloween_orange", "halloween_purple", "halloween_green"),
         "easter": ("easter_pink", "easter_lavender", "easter_yellow"),
         "valentine": ("valentine_red", "valentine_pink", "valentine_white"),
         "4thofjuly": ("independence_red", "independence_white", "independence_blue"),
