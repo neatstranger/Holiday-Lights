@@ -3,94 +3,68 @@ import board
 import time
 import datetime
 
-#garage first corner pixel =  22
-#top of the garage roof = pixel 59
-#Garage Second Corner Pixel = 95
-#Front door left last pixel = 130
-
-
-#Front door right first pixel = 131
-#kitchen first corner pixel =  160
-#top of the kitchen roof = pixel 182
-#second kitchen corner pixel = 205
-
-
-#For some reason the colors aren't right
-#(blue,green,red)
-
 
 pixelCount = 209
-pixels = neopixel.NeoPixel(board.D18, pixelCount)
+pixels = neopixel.NeoPixel(board.D18, pixelCount, auto_write=False)
 
-color_one = (0,0,16)
-color_two = (0,16,0)
-color_three = (4,4,4)
+# Color presets (note: NeoPixel uses (R, G, B) by default)
+color_one = (0, 0, 16)
+color_two = (0, 16, 0)
+color_three = (4, 4, 4)
 off = (0, 0, 0)
 
 garage_section = 130
 kitchen_section = 209
 
-pixels.fill((0,0,0))
+# Clear everything initially
+pixels.fill(off)
+pixels.show()
+
 while True:
-    while (datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 23) or (datetime.datetime.now().hour >= 4 and datetime.datetime.now().hour <= 7) :
-        pixels.auto_write = True
-        pixels.fill((0,0,0))
-        print("Started Showing Solid Color")
-        red = 0
-        while red < 10:
-            pixels.fill((0,0,red))
-            red += 0.1
-        green = 0
-        while green < 10:
-            pixels.fill((0,green,0))
-            green += 0.1
-        white = 0
-        while white < 5:
-            pixels.fill((white, white, white))
-            white += 0.1
-        x = 0
-        print("Started Showing Red and Green")
-        while x < pixelCount -1:
-            red = 0 
-            while red < 25:
-               pixels[x] = (0,0,red) 
-               red += 2
-            green = 0
-            while green < 25:
-               pixels[x+1] = (0,green,0)
-               green +=2
-            x += 2
-        pixels.auto_write = False
-        print("Started Showing Garage/Kitchen Seperate")
-        for x in range(0,25):
-            for pixel in range(0,garage_section):
-                pixels[pixel] = (0,0,x)
-            for pixel in range(garage_section, kitchen_section):
-                pixels[pixel] = (0,x,0)
-            pixels.show()
-            time.sleep(0.1)
-        for x in range(0,25):
-            for pixel in range(0,garage_section):
-                pixels[pixel] = (0,x,0)
-            for pixel in range(garage_section, kitchen_section):
-                pixels[pixel] = (0,0,x)
-            pixels.show()
-            time.sleep(0.1)
-        
-        time.sleep(10)
-        
+    print("Showing solid red fade...")
+    for red in range(0, 10):
+        pixels.fill((0, 0, red))
+        pixels.show()
+        time.sleep(0.02)
 
+    print("Showing solid green fade...")
+    for green in range(0, 10):
+        pixels.fill((0, green, 0))
+        pixels.show()
+        time.sleep(0.02)
 
-# while True:
-#     while datetime.datetime.now().hour >= 17 and datetime.datetime.now().hour <= 22:
-#         for currentPixel in range(pixelCount):
-#             time.sleep(0.075)
-#             pixels[currentPixel] = color_one
-#         for currentPixel in range(pixelCount-1, 0, -1):
-#             time.sleep(0.1)
-#             pixels[currentPixel] =  color_one
-#         for currentPixel in range(pixelCount):
-#             time.sleep(0.075)
-#             pixels[currentPixel] = off
-#     pixels.fill((0,0,0))
-#     time.sleep(600)
+    print("Showing solid white fade...")
+    for white in range(0, 5):
+        pixels.fill((white, white, white))
+        pixels.show()
+        time.sleep(0.02)
+
+    print("Red and Green alternating...")
+    for x in range(0, pixelCount, 2):
+        for red in range(0, 25, 2):
+            pixels[x] = (0, 0, red)
+        if x + 1 < pixelCount:
+            for green in range(0, 25, 2):
+                pixels[x + 1] = (0, green, 0)
+    pixels.show()
+
+    print("Garage/Kitchen sections – mode 1...")
+    for x in range(0, 25):
+        for pixel in range(0, garage_section):
+            pixels[pixel] = (0, 0, x)
+        for pixel in range(garage_section, kitchen_section):
+            pixels[pixel] = (0, x, 0)
+        pixels.show()
+        time.sleep(0.05)
+
+    print("Garage/Kitchen sections – mode 2...")
+    for x in range(0, 25):
+        for pixel in range(0, garage_section):
+            pixels[pixel] = (0, x, 0)
+        for pixel in range(garage_section, kitchen_section):
+            pixels[pixel] = (0, 0, x)
+        pixels.show()
+        time.sleep(0.05)
+
+    # Short pause between cycles
+    time.sleep(1)
