@@ -15,7 +15,7 @@ off = (0, 0, 0)
 
 def get_color(name: str, brightness: float = 1.0) -> tuple:
     """
-    Returns an (R, G, B) tuple for the given color name.
+    Returns a (B, G, R) tuple for the given color name.
     Supports a brightness multiplier (0.0 - 1.0).
     """
 
@@ -64,8 +64,13 @@ def get_color(name: str, brightness: float = 1.0) -> tuple:
         "warm_white": (255, 180, 100)
     }
 
-    rgb = colors.get(name.lower(), (255, 255, 255))
-    return tuple(int(c * brightness) for c in rgb)
+    r, g, b = colors.get(name.lower(), (255, 255, 255))
+    r = int(r * brightness)
+    g = int(g * brightness)
+    b = int(b * brightness)
+
+    # Return as BGR instead of RGB
+    return (b, g, r)
 
 
 # ---------- ANIMATIONS ----------
